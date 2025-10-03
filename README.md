@@ -1,75 +1,304 @@
 # Fantasy Football FAAB Blog System
 
-An automated AI agentic system that generates weekly fantasy football FAAB (Free Agent Acquisition Budget) acquisition blog posts.
+An automated AI agentic system that generates weekly fantasy football FAAB (Free Agent Acquisition Budget) acquisition blog posts. The system uses multiple specialized agents to research, analyze, and publish data-driven content about the most added fantasy football players across leagues.
 
-## Project Structure
+## 🚀 Features
 
+- **Multi-Platform Data Collection**: Integrates with ESPN, Yahoo, and Sleeper fantasy platforms
+- **AI-Powered Analysis**: Evaluates players using news, statistics, and injury reports
+- **Automated Content Generation**: Creates well-formatted blog posts with buy/pass recommendations
+- **Flexible Publishing**: Supports WordPress and Medium blog platforms
+- **Intelligent Scheduling**: Runs automatically on configurable schedules
+- **Comprehensive Monitoring**: Health checks, metrics, and error tracking
+- **Robust Error Handling**: Retry logic, circuit breakers, and graceful degradation
+
+## 📋 Prerequisites
+
+- Node.js 18.0.0 or higher
+- npm or yarn package manager
+- API keys for fantasy platforms and news services
+- Blog platform credentials (WordPress or Medium)
+
+## 🛠️ Installation
+
+### Quick Start
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd fantasy-football-faab-blog
+
+# Install dependencies
+npm install
+
+# Copy environment template
+cp .env.example .env
+
+# Edit .env with your API keys
+nano .env
+
+# Build the application
+npm run build
+
+# Start the system
+npm start
 ```
-src/
-├── agents/           # Agent implementations and interfaces
-│   ├── interfaces.ts # Agent contract definitions
-│   └── index.ts     # Agent exports
-├── services/         # Core services
-│   ├── orchestrator.ts # Orchestrator service interface
-│   └── index.ts     # Service exports
-├── models/          # Data models and types
-│   ├── player.ts    # Player-related models
-│   ├── blog.ts      # Blog-related models
-│   ├── config.ts    # Configuration models
-│   └── index.ts     # Model exports
-├── config/          # Configuration management
-│   ├── system-config.ts # System configuration
-│   └── index.ts     # Config exports
-└── index.ts         # Main application entry point
+
+### Development Setup
+
+```bash
+# Install dependencies
+npm install
+
+# Run in development mode
+npm run dev
+
+# Run tests
+npm test
+
+# Type checking
+npm run type-check
+
+# Linting
+npm run lint
 ```
 
-## Getting Started
+## ⚙️ Configuration
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
+### Environment Variables
 
-2. Copy environment configuration:
-   ```bash
-   cp .env.example .env
-   ```
+Create a `.env` file with your API keys and configuration:
 
-3. Configure your API keys in the `.env` file
+```bash
+# Fantasy Platform API Keys
+ESPN_API_KEY=your_espn_api_key_here
+YAHOO_API_KEY=your_yahoo_api_key_here
+SLEEPER_API_KEY=your_sleeper_api_key_here
 
-4. Build the project:
-   ```bash
-   npm run build
-   ```
+# News Service API Keys
+ESPN_NEWS_API_KEY=your_espn_news_api_key_here
+SPORTS_DATA_API_KEY=your_sports_data_api_key_here
 
-5. Run the application:
-   ```bash
-   npm start
-   ```
+# Blog Platform Configuration
+BLOG_API_KEY=your_blog_api_key_here
+BLOG_BASE_URL=https://your-blog-site.com
+BLOG_USERNAME=your_blog_username
+BLOG_ID=your_blog_id
 
-## Development
+# Schedule Configuration
+SCHEDULE_DAY_OF_WEEK=2  # Tuesday
+SCHEDULE_HOUR=6         # 6 AM
+SCHEDULE_TIMEZONE=America/New_York
 
-- `npm run dev` - Run in development mode with ts-node
-- `npm run test` - Run tests once
-- `npm run test:watch` - Run tests in watch mode
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Run ESLint with auto-fix
-- `npm run type-check` - Run TypeScript type checking
+# Application Configuration
+NODE_ENV=production
+LOG_LEVEL=info
+```
 
-## Architecture
+### Configuration Files
+
+The system supports environment-specific configuration files:
+
+- `config/development.json` - Development environment
+- `config/production.json` - Production environment
+- `config/test.json` - Testing environment
+
+## 🎯 Usage
+
+### Command Line Interface
+
+```bash
+# Start the system with scheduled execution
+faab-blog start
+
+# Run a single blog post generation manually
+faab-blog run
+
+# Check system status
+faab-blog status
+
+# View execution history
+faab-blog history --limit 10
+
+# Show current configuration
+faab-blog config
+
+# Test system connectivity
+faab-blog test
+```
+
+### Programmatic Usage
+
+```typescript
+import { FantasyFootballFAABBlogApp } from 'fantasy-football-faab-blog';
+
+const app = new FantasyFootballFAABBlogApp();
+
+// Start the application
+await app.start();
+
+// Execute manually
+const result = await app.executeManually();
+
+if (result.success) {
+  console.log(`Blog post published: ${result.publishedPostId}`);
+} else {
+  console.error('Execution failed:', result.errors);
+}
+
+// Stop the application
+await app.stop();
+```
+
+## 🏗️ System Architecture
 
 The system uses a multi-agent architecture where specialized agents work sequentially:
 
-1. **Data Collection Agent** - Retrieves most added players from fantasy platforms
-2. **Research Agent** - Gathers news, stats, and injury information
-3. **Analysis Agent** - Evaluates players and generates recommendations
-4. **Writer Agent** - Creates formatted blog posts
-5. **Publisher Agent** - Publishes content to blog platform
-6. **Orchestrator Service** - Coordinates the entire workflow
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│ Data Collection │───▶│ Research Agent   │───▶│ Analysis Agent  │
+│ Agent           │    │                  │    │                 │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         │                       │                       │
+         ▼                       ▼                       ▼
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│ Fantasy         │    │ News & Stats     │    │ FAAB Analysis   │
+│ Platforms       │    │ Services         │    │ & Recommendations│
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+                                                         │
+                                                         ▼
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│ Publisher Agent │◀───│ Writer Agent     │◀───│ Blog Post       │
+│                 │    │                  │    │ Generation      │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Blog Platform   │
+│ (WordPress/     │
+│ Medium)         │
+└─────────────────┘
+```
 
-## Configuration
+### Agent Responsibilities
 
-The system is configured through environment variables and the `SystemConfig` interface. See `.env.example` for all available configuration options.
+- **Data Collection Agent**: Retrieves most added players from ESPN, Yahoo, and Sleeper
+- **Research Agent**: Gathers news articles, statistics, and injury reports
+- **Analysis Agent**: Evaluates players and generates buy/pass recommendations
+- **Writer Agent**: Creates formatted blog posts with engaging content
+- **Publisher Agent**: Publishes content to blog platforms with proper metadata
+
+## 📊 Monitoring and Health Checks
+
+### Health Check Endpoint
+
+```bash
+curl http://localhost:3001/health
+```
+
+Response:
+```json
+{
+  "status": "healthy",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "uptime": 3600000,
+  "version": "1.0.0",
+  "services": [
+    {
+      "name": "DataCollectionAgent",
+      "status": "up",
+      "responseTime": 150
+    }
+  ]
+}
+```
+
+### Metrics Endpoint
+
+```bash
+curl http://localhost:3002/metrics
+```
+
+Provides Prometheus-compatible metrics for monitoring execution times, success rates, and error counts.
+
+## 🔧 Development
+
+### Project Structure
+
+```
+src/
+├── agents/           # AI agents for different tasks
+├── api/             # External API integrations
+├── config/          # Configuration management
+├── models/          # Data models and types
+├── services/        # Core services (orchestrator, monitoring)
+├── utils/           # Utility functions
+├── container.ts     # Dependency injection
+├── index.ts         # Main application entry point
+└── cli.ts          # Command line interface
+```
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run specific test file
+npm test -- src/agents/data-collection-agent.test.ts
+
+# Run tests with coverage
+npm run test:coverage
+```
+
+### Code Quality
+
+```bash
+# Type checking
+npm run type-check
+
+# Linting
+npm run lint
+
+# Fix linting issues
+npm run lint:fix
+```
+
+## 📚 Documentation
+
+- [API Documentation](docs/api-documentation.md) - Comprehensive API reference
+- [Troubleshooting Guide](docs/troubleshooting.md) - Common issues and solutions
+- [Operations Guide](docs/operations.md) - Production deployment and maintenance
+- [Deployment Guide](docs/deployment.md) - Detailed deployment instructions
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Follow TypeScript best practices
+- Write comprehensive tests for new features
+- Update documentation for API changes
+- Use conventional commit messages
+- Ensure all tests pass before submitting PR
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+- **Documentation**: Check the [docs](docs/) directory for detailed guides
+- **Issues**: Report bugs and request features via GitHub Issues
+- **Discussions**: Join community discussions for questions and support
 
 ## Requirements
 

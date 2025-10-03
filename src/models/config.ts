@@ -159,12 +159,12 @@ export class ConfigValidator {
       return false;
     }
     
-    // Allow empty API keys in test environment
+    // Allow empty API keys in development/test environments
     if (typeof config.apiKey !== 'string') {
       return false;
     }
     
-    if (config.apiKey.trim() === '' && process.env.NODE_ENV !== 'test') {
+    if (config.apiKey.trim() === '' && process.env.NODE_ENV === 'production') {
       return false;
     }
     
@@ -196,21 +196,21 @@ export class ConfigValidator {
       return false;
     }
     
-    // Allow empty API keys in test environment
+    // Allow empty API keys in development/test environments
     if (typeof config.apiKey !== 'string') {
       return false;
     }
     
-    if (config.apiKey.trim() === '' && process.env.NODE_ENV !== 'test') {
+    if (config.apiKey.trim() === '' && process.env.NODE_ENV === 'production') {
       return false;
     }
     
-    // Allow empty base URL in test environment
+    // Allow empty base URL in development/test environments
     if (typeof config.baseUrl !== 'string') {
       return false;
     }
     
-    if (config.baseUrl.trim() === '' && process.env.NODE_ENV !== 'test') {
+    if (config.baseUrl.trim() === '' && process.env.NODE_ENV === 'production') {
       return false;
     }
     

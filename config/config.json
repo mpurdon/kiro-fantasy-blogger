@@ -1,0 +1,115 @@
+{
+  "schedule": {
+    "dayOfWeek": 2,
+    "hour": 9,
+    "timezone": "America/New_York"
+  },
+  "apis": {
+    "fantasyPlatforms": [
+      {
+        "name": "ESPN",
+        "apiKey": "",
+        "baseUrl": "https://fantasy.espn.com/apis/v3",
+        "rateLimit": {
+          "requestsPerMinute": 60,
+          "requestsPerHour": 1000
+        },
+        "enabled": true
+      },
+      {
+        "name": "Yahoo",
+        "apiKey": "",
+        "baseUrl": "https://fantasysports.yahooapis.com",
+        "rateLimit": {
+          "requestsPerMinute": 60,
+          "requestsPerHour": 1000
+        },
+        "enabled": true
+      },
+      {
+        "name": "Sleeper",
+        "apiKey": "",
+        "baseUrl": "https://api.sleeper.app/v1",
+        "rateLimit": {
+          "requestsPerMinute": 100,
+          "requestsPerHour": 2000
+        },
+        "enabled": true
+      }
+    ],
+    "newsServices": [
+      {
+        "name": "ESPN News",
+        "apiKey": "",
+        "baseUrl": "https://site.api.espn.com/apis/site/v2",
+        "rateLimit": {
+          "requestsPerMinute": 60,
+          "requestsPerHour": 1000
+        },
+        "enabled": true
+      }
+    ],
+    "sportsData": {
+      "name": "Sports Data API",
+      "apiKey": "",
+      "baseUrl": "https://api.sportsdata.io/v3/nfl",
+      "rateLimit": {
+        "requestsPerMinute": 60,
+        "requestsPerHour": 1000
+      },
+      "enabled": true
+    }
+  },
+  "blog": {
+    "name": "WordPress",
+    "apiKey": "",
+    "baseUrl": "",
+    "defaultTags": [
+      "fantasy football",
+      "FAAB",
+      "waiver wire",
+      "NFL"
+    ],
+    "defaultCategories": [
+      "Fantasy Football",
+      "Analysis"
+    ]
+  },
+  "agents": [
+    {
+      "name": "DataCollectionAgent",
+      "enabled": true,
+      "timeout": 300000,
+      "retryAttempts": 3,
+      "retryDelay": 5000
+    },
+    {
+      "name": "ResearchAgent",
+      "enabled": true,
+      "timeout": 600000,
+      "retryAttempts": 3,
+      "retryDelay": 10000
+    },
+    {
+      "name": "AnalysisAgent",
+      "enabled": true,
+      "timeout": 300000,
+      "retryAttempts": 2,
+      "retryDelay": 5000
+    },
+    {
+      "name": "WriterAgent",
+      "enabled": true,
+      "timeout": 180000,
+      "retryAttempts": 2,
+      "retryDelay": 3000
+    },
+    {
+      "name": "PublisherAgent",
+      "enabled": true,
+      "timeout": 120000,
+      "retryAttempts": 3,
+      "retryDelay": 5000
+    }
+  ]
+}

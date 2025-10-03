@@ -2,13 +2,55 @@
 
 import { initializeContainer, shutdownContainer, getContainer } from './container';
 import { Logger } from './utils';
+import { ExecutionResult } from './models';
 
 // Export all modules for library usage
-export * from './agents';
-export * from './services';
+export {
+  // Agent interfaces and implementations
+  DataCollectionAgent,
+  ResearchAgent,
+  AnalysisAgent,
+  WriterAgent,
+  PublisherAgent,
+  OrchestratorService as IOrchestratorService,
+  ErrorHandler as IErrorHandler,
+  BaseAgent,
+  DataCollectionAgentImpl,
+  ResearchAgentImpl,
+  AnalysisAgentImpl,
+  WriterAgentImpl,
+  PublisherAgentImpl,
+  PublicationValidator
+} from './agents';
+
+export {
+  // Services
+  HealthMonitor,
+  ExecutionTracker,
+  OrchestratorService,
+  ErrorHandler
+} from './services';
+
 export * from './models';
 export * from './config';
-export * from './api';
+
+export {
+  // API clients
+  BaseFantasyClient,
+  ESPNClient,
+  YahooClient,
+  SleeperClient,
+  BaseNewsClient,
+  ESPNNewsClient,
+  SportsDataClient,
+  SentimentAnalyzer,
+  BaseBlogClient,
+  WordPressClient,
+  MediumClient,
+  RateLimiter,
+  CacheManager
+} from './api';
+
 export * from './utils';
 export * from './container';
 
@@ -75,7 +117,7 @@ export class FantasyFootballFAABBlogApp {
     }
   }
 
-  async executeManually(): Promise<void> {
+  async executeManually(): Promise<ExecutionResult> {
     if (!this.isRunning) {
       throw new Error('Application must be started before manual execution');
     }
@@ -110,7 +152,7 @@ export class FantasyFootballFAABBlogApp {
   }
 
   getStatus(): { isRunning: boolean; nextExecution?: Date } {
-    const status = { isRunning: this.isRunning };
+    const status: { isRunning: boolean; nextExecution?: Date } = { isRunning: this.isRunning };
     
     if (this.isRunning) {
       try {

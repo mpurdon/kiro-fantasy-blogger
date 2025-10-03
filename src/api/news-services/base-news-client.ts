@@ -40,7 +40,7 @@ export abstract class BaseNewsClient {
     this.axios.interceptors.request.use(
       async (config) => {
         await this.rateLimiter.checkRateLimit();
-        return this.addAuthHeaders(config);
+        return this.addAuthHeaders(config) as any;
       },
       (error) => Promise.reject(error)
     );

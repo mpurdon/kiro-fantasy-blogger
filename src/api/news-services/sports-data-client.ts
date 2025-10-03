@@ -7,8 +7,7 @@ import { NewsServiceConfig } from '../../models/config';
 import { 
   SportsDataPlayerStats, 
   SportsDataGameStats, 
-  InjuryReportData,
-  NewsAPIError 
+  InjuryReportData
 } from './types';
 
 export class SportsDataClient extends BaseNewsClient {
@@ -27,18 +26,18 @@ export class SportsDataClient extends BaseNewsClient {
     return config;
   }
 
-  public async getPlayerNews(playerId: string, playerName: string): Promise<any[]> {
+  public async getPlayerNews(_playerId: string, _playerName: string): Promise<any[]> {
     // Sports Data API doesn't provide news, only stats
     // This method is implemented to satisfy the interface
     return [];
   }
 
-  public async getRecentNews(limit?: number): Promise<any[]> {
+  public async getRecentNews(_limit?: number): Promise<any[]> {
     // Sports Data API doesn't provide news, only stats
     return [];
   }
 
-  public async searchNews(query: string, limit?: number): Promise<any[]> {
+  public async searchNews(_query: string, _limit?: number): Promise<any[]> {
     // Sports Data API doesn't provide news, only stats
     return [];
   }
@@ -203,26 +202,30 @@ export class SportsDataClient extends BaseNewsClient {
       fantasyPoints: stats.FantasyPoints || 0,
       projectedPoints: 0, // Would need separate projection call
       usage: {
-        snapCount: undefined, // Not provided by this API
-        targets: stats.ReceivingTargets || undefined,
-        carries: stats.RushingAttempts || undefined,
-        redZoneTargets: undefined // Not provided by this API
+        ...(stats.ReceivingTargets !== undefined && { targets: stats.ReceivingTargets }),
+        ...(stats.RushingAttempts !== undefined && { carries: stats.RushingAttempts })
       },
       efficiency: {
-        yardsPerTarget: stats.ReceivingYardsPerTarget || undefined,
-        yardsPerCarry: stats.RushingYardsPerAttempt || undefined,
-        touchdownRate: undefined // Would need to calculate
+        ...(stats.ReceivingYardsPerTarget !== undefined && { yardsPerTarget: stats.ReceivingYardsPerTarget }),
+        ...(stats.RushingYardsPerAttempt !== undefined && { yardsPerCarry: stats.RushingYardsPerAttempt })
       }
     };
   }
 
   private transformInjuryReports(reports: InjuryReportData[]): InjuryReport[] {
-    return reports.map(report => ({
-      status: this.mapInjuryStatus(report.InjuryStatus),
-      description: report.InjuryDetails || `${report.InjuryBodyPart} injury`,
-      expectedReturn: report.InjuryStartDate ? new Date(report.InjuryStartDate) : undefined,
-      impactLevel: this.assessInjuryImpact(report.InjuryStatus, report.InjuryBodyPart)
-    }));
+    return reports.map(report => {
+      const injuryReport: InjuryReport = {
+        status: this.mapInjuryStatus(report.InjuryStatus),
+        description: report.InjuryDetails || `${report.InjuryBodyPart} injury`,
+        impactLevel: this.assessInjuryImpact(report.InjuryStatus, report.InjuryBodyPart)
+      };
+      
+      if (report.InjuryStartDate) {
+        injuryReport.expectedReturn = new Date(report.InjuryStartDate);
+      }
+      
+      return injuryReport;
+    });
   }
 
   private mapInjuryStatus(status: string): InjuryReport['status'] {

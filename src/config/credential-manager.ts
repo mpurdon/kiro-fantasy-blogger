@@ -27,7 +27,7 @@ export class CredentialManager {
 
   constructor(credentialsPath?: string, encryptionKey?: string) {
     this.credentialsPath = credentialsPath || join(process.cwd(), 'config', 'credentials.json');
-    this.encryptionKey = encryptionKey || process.env.CREDENTIAL_ENCRYPTION_KEY;
+    this.encryptionKey = encryptionKey || process.env.CREDENTIAL_ENCRYPTION_KEY || '';
     this.logger = new Logger('CredentialManager');
   }
 
@@ -86,13 +86,21 @@ export class CredentialManager {
       ? this.encrypt(value) 
       : value;
     
-    this.credentialStore!.credentials[name] = {
+    const credential: any = {
       name,
       value: encryptedValue,
-      encrypted: options.encrypt || false,
-      expiresAt: options.expiresAt,
-      description: options.description
+      encrypted: options.encrypt || false
     };
+    
+    if (options.expiresAt) {
+      credential.expiresAt = options.expiresAt;
+    }
+    
+    if (options.description) {
+      credential.description = options.description;
+    }
+    
+    this.credentialStore!.credentials[name] = credential;
     
     this.credentialStore!.updatedAt = new Date();
     await this.saveCredentials();
@@ -129,12 +137,22 @@ export class CredentialManager {
   }>> {
     await this.ensureLoaded();
     
-    return Object.values(this.credentialStore!.credentials).map(cred => ({
-      name: cred.name,
-      encrypted: cred.encrypted || false,
-      expiresAt: cred.expiresAt,
-      description: cred.description
-    }));
+    return Object.values(this.credentialStore!.credentials).map(cred => {
+      const result: any = {
+        name: cred.name,
+        encrypted: cred.encrypted || false
+      };
+      
+      if (cred.expiresAt) {
+        result.expiresAt = cred.expiresAt;
+      }
+      
+      if (cred.description) {
+        result.description = cred.description;
+      }
+      
+      return result;
+    });
   }
 
   /**

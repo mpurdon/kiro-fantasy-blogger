@@ -18,8 +18,8 @@ export class YahooClient extends BaseFantasyClient {
 
   constructor(config: PlatformConfig, authConfig: PlatformAuthConfig = {}) {
     super(config, authConfig);
-    this.accessToken = authConfig.accessToken;
-    this.refreshToken = authConfig.refreshToken;
+    this.accessToken = authConfig.accessToken || '';
+    this.refreshToken = authConfig.refreshToken || '';
   }
 
   protected addAuthHeaders(config: AxiosRequestConfig): AxiosRequestConfig {
@@ -86,7 +86,7 @@ export class YahooClient extends BaseFantasyClient {
     }
   }
 
-  public async getMostAddedPlayers(timeframe: string = 'week'): Promise<PlayerAdditionData[]> {
+  public async getMostAddedPlayers(_timeframe: string = 'week'): Promise<PlayerAdditionData[]> {
     if (!this.authenticated) {
       await this.authenticate();
     }
@@ -126,7 +126,7 @@ export class YahooClient extends BaseFantasyClient {
     }
   }
 
-  public async getPlayerOwnershipTrends(days: number = 7): Promise<PlayerAdditionData[]> {
+  public async getPlayerOwnershipTrends(_days: number = 7): Promise<PlayerAdditionData[]> {
     if (!this.authenticated) {
       await this.authenticate();
     }
@@ -156,7 +156,7 @@ export class YahooClient extends BaseFantasyClient {
       const currentYear = new Date().getFullYear();
       const endpoint = `/fantasy/v2/games;game_codes=nfl;seasons=${currentYear}`;
       
-      const response = await this.get<any>(endpoint);
+      await this.get<any>(endpoint);
       
       // Parse the game key from response
       // This is a simplified implementation

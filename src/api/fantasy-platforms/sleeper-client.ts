@@ -38,7 +38,7 @@ export class SleeperClient extends BaseFantasyClient {
     this.authenticated = true;
   }
 
-  public async getMostAddedPlayers(timeframe: string = 'week'): Promise<PlayerAdditionData[]> {
+  public async getMostAddedPlayers(_timeframe: string = 'week'): Promise<PlayerAdditionData[]> {
     try {
       // Get trending players (most added)
       const trendingData = await this.getTrendingPlayers('add');
@@ -143,7 +143,7 @@ export class SleeperClient extends BaseFantasyClient {
     return result.sort((a, b) => b.additionCount - a.additionCount);
   }
 
-  public async getPlayerOwnershipTrends(days: number = 7): Promise<PlayerAdditionData[]> {
+  public async getPlayerOwnershipTrends(_days: number = 7): Promise<PlayerAdditionData[]> {
     try {
       // Sleeper provides trending data which represents recent additions
       return await this.getMostAddedPlayers();
@@ -224,13 +224,18 @@ export class SleeperClient extends BaseFantasyClient {
 
   public clearPlayersCache(): void {
     this.playersCache.clear();
-    this.playersCacheExpiry = undefined;
+    this.playersCacheExpiry = undefined as any;
   }
 
   public getPlayersCacheStats(): { size: number; expiry?: Date } {
-    return {
-      size: this.playersCache.size,
-      expiry: this.playersCacheExpiry
+    const stats: { size: number; expiry?: Date } = {
+      size: this.playersCache.size
     };
+    
+    if (this.playersCacheExpiry) {
+      stats.expiry = this.playersCacheExpiry;
+    }
+    
+    return stats;
   }
 }

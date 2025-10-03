@@ -7,8 +7,7 @@ import { NewsServiceConfig } from '../../models/config';
 import { 
   ESPNNewsResponse, 
   ESPNArticle, 
-  NewsSearchParams,
-  NewsAPIError 
+  NewsSearchParams
 } from './types';
 
 export class ESPNNewsClient extends BaseNewsClient {

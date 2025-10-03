@@ -43,7 +43,7 @@ program
       await new Promise(() => {});
       
     } catch (error) {
-      console.error('❌ Failed to start system:', error.message);
+      console.error('❌ Failed to start system:', (error as Error).message);
       process.exit(1);
     }
   });
@@ -79,7 +79,7 @@ program
       }
       
     } catch (error) {
-      console.error('❌ Manual execution failed:', error.message);
+      console.error('❌ Manual execution failed:', (error as Error).message);
       process.exit(1);
     }
   });
@@ -116,7 +116,7 @@ program
       await container.shutdown();
       
     } catch (error) {
-      console.error('❌ Failed to get status:', error.message);
+      console.error('❌ Failed to get status:', (error as Error).message);
       process.exit(1);
     }
   });
@@ -158,7 +158,7 @@ program
       await container.shutdown();
       
     } catch (error) {
-      console.error('❌ Failed to get history:', error.message);
+      console.error('❌ Failed to get history:', (error as Error).message);
       process.exit(1);
     }
   });
@@ -181,14 +181,14 @@ program
                                    config.schedule.dayOfWeek === 3 ? 'Wednesday' :
                                    config.schedule.dayOfWeek === 4 ? 'Thursday' :
                                    config.schedule.dayOfWeek === 5 ? 'Friday' : 'Saturday'} at ${config.schedule.hour}:00 (${config.schedule.timezone})`);
-      console.log(`   Blog Platform: ${config.blog.platform}`);
-      console.log(`   Fantasy Platforms: ${config.apis.fantasyPlatforms.map(p => p.platform).join(', ')}`);
-      console.log(`   News Services: ${config.apis.newsServices.map(s => s.service).join(', ')}`);
+      console.log(`   Blog Platform: ${config.blog.name}`);
+      console.log(`   Fantasy Platforms: ${config.apis.fantasyPlatforms.map(p => p.name).join(', ')}`);
+      console.log(`   News Services: ${config.apis.newsServices.map(s => s.name).join(', ')}`);
       
       await container.shutdown();
       
     } catch (error) {
-      console.error('❌ Failed to load configuration:', error.message);
+      console.error('❌ Failed to load configuration:', (error as Error).message);
       process.exit(1);
     }
   });
@@ -209,10 +209,10 @@ program
       console.log('📊 Health Check Results:');
       console.log(`   Overall Status: ${healthStatus.status === 'healthy' ? '✅ Healthy' : '❌ Unhealthy'}`);
       
-      if (healthStatus.checks) {
-        Object.entries(healthStatus.checks).forEach(([service, status]) => {
-          const icon = status === 'healthy' ? '✅' : '❌';
-          console.log(`   ${service}: ${icon} ${status}`);
+      if (healthStatus.services) {
+        healthStatus.services.forEach(service => {
+          const icon = service.status === 'up' ? '✅' : '❌';
+          console.log(`   ${service.name}: ${icon} ${service.status}`);
         });
       }
       
@@ -223,14 +223,14 @@ program
       await container.shutdown();
       
     } catch (error) {
-      console.error('❌ System test failed:', error.message);
+      console.error('❌ System test failed:', (error as Error).message);
       process.exit(1);
     }
   });
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
-  logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  logger.error('Unhandled Rejection at:', { promise, reason });
   process.exit(1);
 });
 

@@ -13,7 +13,7 @@ import {
 } from './types';
 
 export class ESPNClient extends BaseFantasyClient {
-  private leagueId?: string;
+  // private _leagueId?: string;
   private seasonId: number;
 
   constructor(config: PlatformConfig, authConfig: PlatformAuthConfig = {}) {
@@ -42,7 +42,7 @@ export class ESPNClient extends BaseFantasyClient {
     this.authenticated = true;
   }
 
-  public async getMostAddedPlayers(timeframe: string = 'week'): Promise<PlayerAdditionData[]> {
+  public async getMostAddedPlayers(_timeframe: string = 'week'): Promise<PlayerAdditionData[]> {
     try {
       // ESPN's public API endpoint for player ownership changes
       const endpoint = `/games/ffl/seasons/${this.seasonId}/segments/0/leagues/0/players`;
@@ -88,7 +88,7 @@ export class ESPNClient extends BaseFantasyClient {
     }
   }
 
-  public async getPlayerOwnershipTrends(days: number = 7): Promise<PlayerAdditionData[]> {
+  public async getPlayerOwnershipTrends(_days: number = 7): Promise<PlayerAdditionData[]> {
     try {
       // Get players with significant ownership changes
       const endpoint = `/games/ffl/seasons/${this.seasonId}/segments/0/leagues/0/players`;
@@ -161,7 +161,7 @@ export class ESPNClient extends BaseFantasyClient {
 
   public async getLeagueInfo(leagueId: string): Promise<any> {
     try {
-      this.leagueId = leagueId;
+      // this._leagueId = leagueId;
       const endpoint = `/games/ffl/seasons/${this.seasonId}/segments/0/leagues/${leagueId}`;
       
       const params = {
@@ -186,12 +186,13 @@ export class ESPNClient extends BaseFantasyClient {
       };
 
       const response = await this.get(endpoint, params);
+      const data = response.data as any;
       
-      if (!response.data.players || response.data.players.length === 0) {
+      if (!data.players || data.players.length === 0) {
         throw new PlatformAPIError(`Player stats for ${playerId} not found`, this.config.name);
       }
 
-      return response.data.players[0];
+      return data.players[0];
     } catch (error) {
       this.handleError(error, `Failed to fetch player stats for ${playerId} from ESPN`);
     }

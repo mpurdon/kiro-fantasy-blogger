@@ -1,7 +1,7 @@
 // Configuration management system with file loading, validation, and environment support
 
 import { promises as fs } from 'fs';
-import { join, dirname } from 'path';
+import { join } from 'path';
 import { SystemConfig, ConfigValidator, ConfigLoader } from '../models/config';
 import { Logger } from '../utils/logger';
 

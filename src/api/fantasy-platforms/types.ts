@@ -1,6 +1,6 @@
 // Common types for fantasy platform API clients
 
-import { PlayerAdditionData, PlayerSummary } from '../../models/player';
+import { PlayerAdditionData } from '../../models/player';
 
 export interface FantasyPlatformClient {
   getMostAddedPlayers(timeframe?: string): Promise<PlayerAdditionData[]>;
@@ -89,7 +89,7 @@ export class PlatformAPIError extends Error implements PlatformError {
     super(message);
     this.name = 'PlatformAPIError';
     this.platform = platform;
-    this.statusCode = statusCode;
+    this.statusCode = statusCode || 0;
     this.response = response;
   }
 }

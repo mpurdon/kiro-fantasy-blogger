@@ -20,8 +20,8 @@ export abstract class BaseBlogClient {
     this.authConfig = {
       ...authConfig,
       apiKey: authConfig.apiKey || config.apiKey,
-      username: authConfig.username || config.username || undefined,
-      blogId: authConfig.blogId || config.blogId || undefined
+      ...(authConfig.username || config.username ? { username: authConfig.username || config.username } : {}),
+      ...(authConfig.blogId || config.blogId ? { blogId: authConfig.blogId || config.blogId } : {})
     };
     
     this.axios = axios.create({
@@ -184,13 +184,18 @@ export abstract class BaseBlogClient {
   }
 
   protected createSuccessResult(postId: string, url?: string): PublicationResult {
-    return {
+    const result: PublicationResult = {
       success: true,
       postId,
-      url: url || undefined,
       publishedAt: new Date(),
       status: 'published'
     };
+    
+    if (url) {
+      result.url = url;
+    }
+    
+    return result;
   }
 
   protected createFailureResult(error: string): PublicationResult {

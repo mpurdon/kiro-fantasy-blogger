@@ -3,7 +3,7 @@
 import { createServer, IncomingMessage, ServerResponse } from 'http';
 import { SystemConfig } from '../models/config';
 import { Logger } from '../utils/logger';
-import { ExecutionStatus } from '../models/config';
+// import { ExecutionStatus } from '../models/config';
 
 export interface HealthStatus {
   status: 'healthy' | 'degraded' | 'unhealthy';
@@ -157,16 +157,21 @@ export class HealthMonitor {
       status = 'degraded';
     }
 
-    return {
+    const healthStatus: HealthStatus = {
       status,
       timestamp: new Date(),
       uptime: Date.now() - this.startTime.getTime(),
       version: process.env.npm_package_version || '1.0.0',
       environment: process.env.NODE_ENV || 'development',
       services,
-      lastExecution,
       systemMetrics
     };
+    
+    if (lastExecution) {
+      healthStatus.lastExecution = lastExecution;
+    }
+    
+    return healthStatus;
   }
 
   /**
@@ -478,7 +483,7 @@ export const DEFAULT_MONITORING_CONFIG: MonitoringConfig = {
   },
   alerts: {
     enabled: process.env.NODE_ENV === 'production',
-    webhookUrl: process.env.WEBHOOK_URL,
+    ...(process.env.WEBHOOK_URL && { webhookUrl: process.env.WEBHOOK_URL }),
     emailRecipients: process.env.ALERT_EMAIL ? [process.env.ALERT_EMAIL] : [],
     thresholds: {
       memoryUsage: 85, // 85%

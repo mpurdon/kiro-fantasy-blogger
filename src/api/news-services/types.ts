@@ -198,7 +198,7 @@ export class NewsAPIError extends Error implements NewsServiceError {
     super(message);
     this.name = 'NewsAPIError';
     this.service = service;
-    this.statusCode = statusCode;
+    this.statusCode = statusCode || 0;
     this.response = response;
   }
 }

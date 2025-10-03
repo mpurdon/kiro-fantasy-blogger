@@ -2,6 +2,24 @@
 
 An automated AI agentic system that generates weekly fantasy football FAAB (Free Agent Acquisition Budget) acquisition blog posts. The system uses multiple specialized agents to research, analyze, and publish data-driven content about the most added fantasy football players across leagues.
 
+## Spec-Driven Development Notes
+
+This project was 100% developed using spec-driven development through Kiro. The initial prompt was:
+
+> Create an AI agentic process to populate a blog that writes about fantasy football FAAB acquistions. One agent should should go out and grab a list of the most added players across fantasy football leagues and cull the list down to a top 10 list. Then, another agent should go out and retrieve news and data for each of the members of the top 10 list to determine why the player is on the most added list. Finally, a transactions expert agent should make the determination whether each player should be considered a buy or pass. All of this information should be put together into a blog post by a writer agent and published to a blog app.
+
+There were no steering or guidance documents provided and no MCP servers were enabled. All designs and tasks were approved without review and development was run in full yolo/unsafe mode lasting a total of 1 hour and 45 minutes to complete at a cost of about $3.88 USD.
+
+The price caclulation is based on a credit usage of 97 multiplied by the credit overage price of $0.04 USD per credit.
+
+The developer time savings might be as much as 8-12 days.
+
+- Core Infrastructure (2-3 days)
+- External API Integrations (2-3 days)
+- Agent Implementations (3-4 days)
+- Orchestration and Production (1-2 days)
+
+
 ## 🚀 Features
 
 - **Multi-Platform Data Collection**: Integrates with ESPN, Yahoo, and Sleeper fantasy platforms
